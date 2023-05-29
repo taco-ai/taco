@@ -30,12 +30,10 @@ class Session:
         if initial_examples:
             self.messages.extend(initial_examples)
 
-    async def chat(self, user: UserPrompt) -> AssistantPrompt:
+    async def chat(self, user: UserPrompt) -> Prompt:
         self.messages.append(user)
-        completion = await openai.ChatCompletion.acreate({
-            "model": "gpt-3.5-turbo",
-            "messages": [m.to_dict() for m in self.messages]
-        })
+        completion = await openai.ChatCompletion.acreate(model="gpt-3.5-turbo",
+                                                         messages=[m.dict() for m in self.messages])
 
         return Prompt(**completion.choices[0].message)
     
